@@ -1,7 +1,5 @@
 package com.xf.gankapp.network;
 
-import android.content.Context;
-
 import com.facebook.stetho.okhttp3.StethoInterceptor;
 import com.xf.gankapp.BuildConfig;
 import com.xf.gankapp.GankAPI;
@@ -37,17 +35,17 @@ public class RetrofitUtil {
     /**
      * 确保该方法在Application类中调用一次
      *
-     * @param context
+     * @param
      * @return
      */
-    public static Retrofit getInstance(Context context) {
+    public static Retrofit getInstance() {
         if (retrofit == null) {
             synchronized (RetrofitUtil.class) {
                 if (retrofit == null) {
                     retrofit = new Retrofit.Builder().baseUrl(GankAPI.BASE_URL)
                             .addConverterFactory(GsonConverterFactory.create())
                             .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                            .client(getClient(context))
+                            .client(getClient())
                             .build();
                 }
 
@@ -57,12 +55,12 @@ public class RetrofitUtil {
     }
 
 
-    public static OkHttpClient getClient(Context context) {
-        OkHttpClient client = new OkHttpClient();
+    private static OkHttpClient getClient() {
+        OkHttpClient.Builder builder = new OkHttpClient.Builder();
         if (BuildConfig.DEBUG) {
-            client.interceptors().add(new StethoInterceptor());
+            builder.networkInterceptors().add(new StethoInterceptor());
         }
-        return client;
+        return builder.build();
     }
 
     private static OkHttpClient getUnsafeOkHttpClient() throws NoSuchAlgorithmException {

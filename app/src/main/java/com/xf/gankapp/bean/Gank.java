@@ -36,4 +36,8 @@ public class Gank {
     public String getUrl() {
         return url;
     }
+
+    public void setPublishedAt(String publishedAt) {
+        this.publishedAt = publishedAt;
+    }
 }

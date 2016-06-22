@@ -36,7 +36,7 @@ ext {
                     "rxbinding-design"          : 'com.jakewharton.rxbinding:rxbinding-design:0.3.0',
                     "rxbinding-recyclerview-v7" : 'com.jakewharton.rxbinding:rxbinding-recyclerview-v7:0.3.0',
                     "rxjava"                    : 'io.reactivex:rxjava:1.1.0',
-                    "rxandroid"                 : 'io.reactivex:rxandroid:0.23.0',
+                    "rxandroid"                 : 'io.reactivex:rxandroid:1.2.1',
                     "adapter-rxjava"            : 'com.squareup.retrofit2:adapter-rxjava:2.1.0',
                     "rxlifecycle"               : 'com.trello:rxlifecycle:0.4.0',
                     "rxlifecycle-components"    : 'com.trello:rxlifecycle-components:0.4.0',

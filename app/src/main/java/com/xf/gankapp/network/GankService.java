@@ -1,8 +1,6 @@
 package com.xf.gankapp.network;
 
-import com.xf.gankapp.bean.Gank;
-
-import java.util.List;
+import com.xf.gankapp.bean.AllResults;
 
 import retrofit2.http.GET;
 import retrofit2.http.Path;
@@ -14,6 +12,6 @@ import rx.Observable;
 public interface GankService {
 
     @GET("data/all/{count}/{page}")
-    Observable<List<Gank>> getAll(@Path("count") int count, @Path("page") int page);
+    Observable<AllResults> getAll(@Path("count") int count, @Path("page") int page);
 
 }

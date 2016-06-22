@@ -53,5 +53,6 @@ dependencies {
     compile rootProject.ext.dependencies['converter-gson']
     compile rootProject.ext.dependencies['adapter-rxjava']
     compile rootProject.ext.dependencies["stetho-okhttp3"]
+    compile rootProject.ext.dependencies["rxandroid"]
 
 }

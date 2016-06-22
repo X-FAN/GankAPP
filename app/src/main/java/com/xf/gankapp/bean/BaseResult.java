@@ -8,4 +8,8 @@ import com.google.gson.annotations.SerializedName;
 public class BaseResult {
     @SerializedName("error")
     private boolean error;
+
+    public boolean isError() {
+        return error;
+    }
 }

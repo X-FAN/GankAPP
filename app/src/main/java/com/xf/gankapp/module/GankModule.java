@@ -1,11 +1,9 @@
 package com.xf.gankapp.module;
 
-import com.xf.gankapp.bean.Gank;
+import com.xf.gankapp.bean.AllResults;
 import com.xf.gankapp.module.interfaceModule.IGankModule;
 import com.xf.gankapp.network.GankService;
 import com.xf.gankapp.network.RetrofitUtil;
-
-import java.util.List;
 
 import rx.Observable;
 
@@ -15,7 +13,7 @@ import rx.Observable;
 public class GankModule implements IGankModule {
 
     @Override
-    public Observable<List<Gank>> getAll(int count, int page) {
+    public Observable<AllResults> getAll(int count, int page) {
         GankService gankService = RetrofitUtil.getRetrofit().create(GankService.class);
         gankService.getAll(count, page);
         return gankService.getAll(count, page);

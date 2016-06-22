@@ -1,8 +1,6 @@
 package com.xf.gankapp.module.interfaceModule;
 
-import com.xf.gankapp.bean.Gank;
-
-import java.util.List;
+import com.xf.gankapp.bean.AllResults;
 
 import rx.Observable;
 
@@ -11,5 +9,5 @@ import rx.Observable;
  */
 public interface IGankModule {
 
-    Observable<List<Gank>> getAll(int count, int page);
+    Observable<AllResults> getAll(int count, int page);
 }

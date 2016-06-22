@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Created by X-FAN on 2016/6/21.
  */
-public class ALLResults extends BaseResult {
+public class AllResults extends BaseResult {
     @SerializedName("results")
     List<Gank> gankList;
 
