@@ -9,5 +9,11 @@ import rx.Observable;
  */
 public interface IGankModule {
 
+    /**
+     * 获取全部干货
+     * @param count
+     * @param page
+     * @return
+     */
     Observable<AllResults> getAll(int count, int page);
 }

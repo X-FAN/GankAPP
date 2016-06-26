@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="5dp"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/autuor_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="作者:" />
+
+        <TextView
+            android:text="sdfj"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/autuor_title" />
+
+        <TextView
+            android:layout_marginTop="10dp"
+            android:layout_below="@+id/autuor_title"
+            android:id="@+id/title_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="标题:" />
+        <TextView
+            android:layout_alignBottom="@+id/title_title"
+            android:text="12323"
+            android:layout_toRightOf="@+id/title_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+</android.support.v7.widget.CardView>
