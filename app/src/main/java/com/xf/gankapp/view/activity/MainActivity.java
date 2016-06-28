@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentTransaction;
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
 import com.xf.gankapp.R;
+import com.xf.gankapp.presenter.AllPresenter;
 import com.xf.gankapp.view.fragment.AllFragment;
 
 import butterknife.Bind;
@@ -52,6 +53,7 @@ public class MainActivity extends BaseActivity {
 
             }
         });
+        setTabSelection(0);
     }
 
 
@@ -67,6 +69,7 @@ public class MainActivity extends BaseActivity {
             case 0://全部
                 if (mAllFragment == null) {
                     mAllFragment = new AllFragment();
+                    new AllPresenter(mAllFragment);
                     transaction.add(R.id.fragment_container, mAllFragment, FRAGMENT_TAG[0]);
                 } else {
                     transaction.show(mAllFragment);

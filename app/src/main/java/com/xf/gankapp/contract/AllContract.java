@@ -17,7 +17,7 @@ public interface AllContract {
          * @param count
          * @param page
          */
-        void subcribeAllGank(int count, int page);
+        void subscribeAllGank(int count, int page);
     }
 
     interface View extends BaseView<Presenter> {

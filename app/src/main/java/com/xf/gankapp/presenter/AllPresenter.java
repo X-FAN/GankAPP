@@ -31,7 +31,7 @@ public class AllPresenter implements AllContract.Presenter {
     }
 
     @Override
-    public void subcribeAllGank(int count, int page) {
+    public void subscribeAllGank(int count, int page) {
         Subscription subscription = mGankModule.getAll(count, page)
                 .subscribeOn(Schedulers.io())
                 .map(new Func1<AllResults, List<Gank>>() {
@@ -81,7 +81,7 @@ public class AllPresenter implements AllContract.Presenter {
     }
 
     @Override
-    public void unsubscribe() {
+    public void unSubscribe() {
         mSubscribiptions.clear();
 
     }
