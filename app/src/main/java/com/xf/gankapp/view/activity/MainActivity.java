@@ -20,7 +20,7 @@ public class MainActivity extends BaseActivity {
     private AllFragment mAllFragment;
 
     @Bind(R.id.bottom_navigation_bar)
-    BottomNavigationBar mBottomNavigationBar;
+    public BottomNavigationBar mBottomNavigationBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

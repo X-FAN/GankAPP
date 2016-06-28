@@ -18,6 +18,7 @@ import com.xf.gankapp.bean.Gank;
 import com.xf.gankapp.contract.AllContract;
 import com.xf.gankapp.util.CommonUtils;
 import com.xf.gankapp.util.T;
+import com.xf.gankapp.view.activity.MainActivity;
 import com.xf.gankapp.view.adapter.GankAdapter;
 
 import java.util.List;
@@ -56,6 +57,18 @@ public class AllFragment extends Fragment implements AllContract.View, SwipeRefr
         mAllGankShow.setLayoutManager(new LinearLayoutManager(getActivity()));
         mGankAdapter = new GankAdapter(getActivity());
         mAllGankShow.setAdapter(mGankAdapter);
+        mAllGankShow.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (dy > 5) {
+                    ((MainActivity) getActivity()).mBottomNavigationBar.setVisibility(View.GONE);
+                } else if (dy < -5) {
+                    ((MainActivity) getActivity()).mBottomNavigationBar.setVisibility(View.VISIBLE);
+
+                }
+            }
+        });
         return view;
     }
 
