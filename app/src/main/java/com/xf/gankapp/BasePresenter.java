@@ -6,8 +6,6 @@ package com.xf.gankapp;
 
 public interface BasePresenter {
 
-    void subscribe();
-
     void unSubscribe();
 
 }

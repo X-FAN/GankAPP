@@ -17,7 +17,7 @@ import android.view.ViewGroup;
 import com.xf.gankapp.OnScrollChangeListener;
 import com.xf.gankapp.R;
 import com.xf.gankapp.bean.Gank;
-import com.xf.gankapp.contract.AllContract;
+import com.xf.gankapp.contract.AndroidContract;
 import com.xf.gankapp.util.CommonUtils;
 import com.xf.gankapp.util.T;
 import com.xf.gankapp.view.adapter.GankAdapter;
@@ -27,12 +27,9 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-/**
- * A simple {@link Fragment} subclass.
- */
-public class AllFragment extends Fragment implements AllContract.View, SwipeRefreshLayout.OnRefreshListener {
 
-    private AllContract.Presenter mPresenter;
+public class AndroidFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, AndroidContract.View {
+    private AndroidContract.Presenter mPresenter;
     private OnScrollChangeListener mListener;
 
     private GankAdapter mGankAdapter;
@@ -52,7 +49,8 @@ public class AllFragment extends Fragment implements AllContract.View, SwipeRefr
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
         return initViews(inflater, container);
     }
 
@@ -70,14 +68,23 @@ public class AllFragment extends Fragment implements AllContract.View, SwipeRefr
     }
 
     @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
+
+    @Override
     public void onPause() {
         super.onPause();
         mPresenter.unSubscribe();
     }
 
+    public AndroidFragment() {
+    }
+
 
     private View initViews(LayoutInflater inflater, ViewGroup container) {
-        View view = inflater.inflate(R.layout.fragment_all, container, false);
+        View view = inflater.inflate(R.layout.fragment_android, container, false);
         ButterKnife.bind(this, view);
         mSwipeRefresh.setColorSchemeResources(R.color.colorPrimary);
         mSwipeRefresh.setOnRefreshListener(this);
@@ -92,6 +99,7 @@ public class AllFragment extends Fragment implements AllContract.View, SwipeRefr
                     mListener.onScrollChangeListener(true);
                 } else if (dy < -5) {
                     mListener.onScrollChangeListener(false);
+
                 }
             }
         });
@@ -99,13 +107,18 @@ public class AllFragment extends Fragment implements AllContract.View, SwipeRefr
     }
 
     @Override
-    public void showAllGank(List<Gank> gankList) {
+    public void onRefresh() {
+        mPresenter.subscribeAndroidGank(20, 1);
+    }
+
+    @Override
+    public void showAndroidGank(List<Gank> gankList) {
         mGankAdapter.setData(gankList);
         hideLoading();
     }
 
     @Override
-    public void setPresenter(AllContract.Presenter presenter) {
+    public void setPresenter(AndroidContract.Presenter presenter) {
         mPresenter = presenter;
     }
 
@@ -126,8 +139,4 @@ public class AllFragment extends Fragment implements AllContract.View, SwipeRefr
         }
     }
 
-    @Override
-    public void onRefresh() {
-        mPresenter.subscribeAllGank(20, 1);
-    }
 }

@@ -2,7 +2,7 @@ package com.xf.gankapp.presenter;
 
 import com.xf.gankapp.bean.AllResults;
 import com.xf.gankapp.bean.Gank;
-import com.xf.gankapp.contract.AllContract;
+import com.xf.gankapp.contract.IOSContract;
 import com.xf.gankapp.module.GankModule;
 import com.xf.gankapp.module.interfaceModule.IGankModule;
 
@@ -16,23 +16,24 @@ import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 /**
- * Created by X-FAN on 2016/6/22.
+ * Created by X-FAN on 2016/7/6.
  */
-public class AllPresenter implements AllContract.Presenter {
+public class IOSPresenter implements IOSContract.Presenter {
+
     private CompositeSubscription mSubscriptions;
     private IGankModule mGankModule;
-    private AllContract.View mAllView;
+    private IOSContract.View mIOSView;
 
-    public AllPresenter(AllContract.View view) {
+
+    public IOSPresenter(IOSContract.View view) {
         mSubscriptions = new CompositeSubscription();
         mGankModule = new GankModule();
-        mAllView = view;
-        mAllView.setPresenter(this);
+        mIOSView = view;
+        mIOSView.setPresenter(this);
     }
-
     @Override
-    public void subscribeAllGank(int count, int page) {
-        Subscription subscription = mGankModule.getAll(count, page)
+    public void subscribeIOSGank(int count, int page) {
+        Subscription subscription = mGankModule.getIOS(count, page)
                 .subscribeOn(Schedulers.io())
                 .map(new Func1<AllResults, List<Gank>>() {
 
@@ -65,21 +66,19 @@ public class AllPresenter implements AllContract.Presenter {
 
                     @Override
                     public void onError(Throwable e) {
-                        mAllView.showTip(e.getMessage());
+                        mIOSView.showTip(e.getMessage());
                     }
 
                     @Override
                     public void onNext(List<Gank> ganks) {
-                        mAllView.showAllGank(ganks);
+                        mIOSView.showIOSGank(ganks);
                     }
                 });
         mSubscriptions.add(subscription);
     }
 
-
     @Override
     public void unSubscribe() {
-        mSubscriptions.clear();
 
     }
 }

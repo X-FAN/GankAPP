@@ -15,7 +15,18 @@ public class GankModule implements IGankModule {
     @Override
     public Observable<AllResults> getAll(int count, int page) {
         GankService gankService = RetrofitUtil.getRetrofit().create(GankService.class);
-        gankService.getAll(count, page);
         return gankService.getAll(count, page);
+    }
+
+    @Override
+    public Observable<AllResults> getAndroid(int count, int page) {
+        GankService gankService = RetrofitUtil.getRetrofit().create(GankService.class);
+        return gankService.getAndroid(count, page);
+    }
+
+    @Override
+    public Observable<AllResults> getIOS(int count, int page) {
+        GankService gankService = RetrofitUtil.getRetrofit().create(GankService.class);
+        return gankService.getIOS(count, page);
     }
 }

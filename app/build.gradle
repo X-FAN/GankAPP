@@ -55,5 +55,8 @@ dependencies {
     compile rootProject.ext.dependencies["stetho-okhttp3"]
     compile rootProject.ext.dependencies["rxandroid"]
     compile rootProject.ext.dependencies["cardview-v7"]
+    compile rootProject.ext.dependencies["easing-library"]
+    compile rootProject.ext.dependencies["nineoldandroids"]
+    compile rootProject.ext.dependencies['androidanimations']
 
 }

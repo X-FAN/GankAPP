@@ -14,4 +14,10 @@ public interface GankService {
     @GET("data/all/{count}/{page}")
     Observable<AllResults> getAll(@Path("count") int count, @Path("page") int page);
 
+    @GET("data/Android/{count}/{page}")
+    Observable<AllResults> getAndroid(@Path("count") int count, @Path("page") int page);
+
+    @GET("data/iOS/{count}/{page}")
+    Observable<AllResults> getIOS(@Path("count") int count, @Path("page") int page);
+
 }

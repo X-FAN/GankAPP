@@ -1,6 +1,5 @@
 package com.xf.gankapp.view.fragment;
 
-
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
@@ -17,7 +16,7 @@ import android.view.ViewGroup;
 import com.xf.gankapp.OnScrollChangeListener;
 import com.xf.gankapp.R;
 import com.xf.gankapp.bean.Gank;
-import com.xf.gankapp.contract.AllContract;
+import com.xf.gankapp.contract.IOSContract;
 import com.xf.gankapp.util.CommonUtils;
 import com.xf.gankapp.util.T;
 import com.xf.gankapp.view.adapter.GankAdapter;
@@ -27,19 +26,18 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-/**
- * A simple {@link Fragment} subclass.
- */
-public class AllFragment extends Fragment implements AllContract.View, SwipeRefreshLayout.OnRefreshListener {
 
-    private AllContract.Presenter mPresenter;
+public class IOSFragment extends Fragment implements IOSContract.View, SwipeRefreshLayout.OnRefreshListener {
+
     private OnScrollChangeListener mListener;
+    private IOSContract.Presenter mPresenter;
 
     private GankAdapter mGankAdapter;
     @Bind(R.id.all_gank_show)
     RecyclerView mAllGankShow;
     @Bind(R.id.swipe_refresh)
     SwipeRefreshLayout mSwipeRefresh;
+
 
     @Override
     public void onAttach(Context context) {
@@ -52,7 +50,8 @@ public class AllFragment extends Fragment implements AllContract.View, SwipeRefr
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
         return initViews(inflater, container);
     }
 
@@ -70,14 +69,20 @@ public class AllFragment extends Fragment implements AllContract.View, SwipeRefr
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-        mPresenter.unSubscribe();
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
+
+    public void scrollChange(boolean state) {
+        if (mListener != null) {
+            mListener.onScrollChangeListener(state);
+        }
     }
 
 
     private View initViews(LayoutInflater inflater, ViewGroup container) {
-        View view = inflater.inflate(R.layout.fragment_all, container, false);
+        View view = inflater.inflate(R.layout.fragment_io, container, false);
         ButterKnife.bind(this, view);
         mSwipeRefresh.setColorSchemeResources(R.color.colorPrimary);
         mSwipeRefresh.setOnRefreshListener(this);
@@ -89,9 +94,9 @@ public class AllFragment extends Fragment implements AllContract.View, SwipeRefr
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 if (dy > 5) {
-                    mListener.onScrollChangeListener(true);
+                    scrollChange(true);
                 } else if (dy < -5) {
-                    mListener.onScrollChangeListener(false);
+                    scrollChange(false);
                 }
             }
         });
@@ -99,13 +104,25 @@ public class AllFragment extends Fragment implements AllContract.View, SwipeRefr
     }
 
     @Override
-    public void showAllGank(List<Gank> gankList) {
+    public void onPause() {
+        super.onPause();
+        mPresenter.unSubscribe();
+    }
+
+    @Override
+    public void onRefresh() {
+        mPresenter.subscribeIOSGank(20, 1);
+    }
+
+
+    @Override
+    public void showIOSGank(List<Gank> gankList) {
         mGankAdapter.setData(gankList);
         hideLoading();
     }
 
     @Override
-    public void setPresenter(AllContract.Presenter presenter) {
+    public void setPresenter(IOSContract.Presenter presenter) {
         mPresenter = presenter;
     }
 
@@ -121,13 +138,8 @@ public class AllFragment extends Fragment implements AllContract.View, SwipeRefr
 
     @Override
     public void showTip(String msg) {
-        if (!TextUtils.isEmpty(msg)) {
+        if (TextUtils.isEmpty(msg)) {
             T.showLong(getActivity(), msg);
         }
-    }
-
-    @Override
-    public void onRefresh() {
-        mPresenter.subscribeAllGank(20, 1);
     }
 }

@@ -6,21 +6,35 @@ import android.support.v4.app.FragmentTransaction;
 
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
+import com.daimajia.androidanimations.library.YoYo;
+import com.xf.gankapp.OnScrollChangeListener;
 import com.xf.gankapp.R;
+import com.xf.gankapp.animator.DownAnimator;
+import com.xf.gankapp.animator.UpAnimator;
 import com.xf.gankapp.presenter.AllPresenter;
+import com.xf.gankapp.presenter.AndroidPresenter;
+import com.xf.gankapp.presenter.IOSPresenter;
+import com.xf.gankapp.util.L;
 import com.xf.gankapp.view.fragment.AllFragment;
+import com.xf.gankapp.view.fragment.AndroidFragment;
+import com.xf.gankapp.view.fragment.IOSFragment;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements OnScrollChangeListener {
 
+    private boolean mIsBottomShow = true;
     private final String[] FRAGMENT_TAG = new String[]{"all", "android", "ios"};
+
+    private DownAnimator mDownAnimator = new DownAnimator();
+    private UpAnimator mUpAnimator = new UpAnimator();
     private FragmentManager mFragmentManager;
     private AllFragment mAllFragment;
-
+    private AndroidFragment mAndroidFragment;
+    private IOSFragment mIOSFragment;
     @Bind(R.id.bottom_navigation_bar)
-    public BottomNavigationBar mBottomNavigationBar;
+    BottomNavigationBar mBottomNavigationBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,9 +90,22 @@ public class MainActivity extends BaseActivity {
                 }
                 break;
             case 1://android
-
+                if (mAndroidFragment == null) {
+                    mAndroidFragment = new AndroidFragment();
+                    new AndroidPresenter(mAndroidFragment);
+                    transaction.add(R.id.fragment_container, mAndroidFragment, FRAGMENT_TAG[1]);
+                } else {
+                    transaction.show(mAndroidFragment);
+                }
                 break;
             case 2://ios
+                if (mIOSFragment == null) {
+                    mIOSFragment = new IOSFragment();
+                    new IOSPresenter(mIOSFragment);
+                    transaction.add(R.id.fragment_container, mIOSFragment, FRAGMENT_TAG[2]);
+                } else {
+                    transaction.show(mIOSFragment);
+                }
                 break;
             default:
                 break;
@@ -95,6 +122,31 @@ public class MainActivity extends BaseActivity {
     private void hideFragments(FragmentTransaction transaction) {
         if (mAllFragment != null) {
             transaction.hide(mAllFragment);
+        }
+        if (mAndroidFragment != null) {
+            transaction.hide(mAndroidFragment);
+        }
+        if (mIOSFragment != null) {
+            transaction.hide(mIOSFragment);
+        }
+    }
+
+
+    @Override
+    public void onScrollChangeListener(boolean state) {
+        if (!mDownAnimator.isRunning() && !mUpAnimator.isRunning()) {
+            if (state) {//隐藏
+                if (mIsBottomShow) {
+                    YoYo.with(mDownAnimator).duration(300).playOn(mBottomNavigationBar);
+                    mIsBottomShow = false;
+                }
+            } else {//显示
+                if (!mIsBottomShow) {
+                    YoYo.with(mUpAnimator).duration(300).playOn(mBottomNavigationBar);
+                    mIsBottomShow = true;
+                }
+            }
+            L.e("mIsBottomShow" + mIsBottomShow);
         }
     }
 }
