@@ -2,6 +2,7 @@ package com.xf.gankapp.view.fragment;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -14,12 +15,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.xf.gankapp.OnItemClickListener;
 import com.xf.gankapp.OnScrollChangeListener;
 import com.xf.gankapp.R;
 import com.xf.gankapp.bean.Gank;
 import com.xf.gankapp.contract.AllContract;
 import com.xf.gankapp.util.CommonUtils;
 import com.xf.gankapp.util.T;
+import com.xf.gankapp.view.activity.WebViewActivity;
 import com.xf.gankapp.view.adapter.GankAdapter;
 
 import java.util.List;
@@ -76,13 +79,25 @@ public class AllFragment extends Fragment implements AllContract.View, SwipeRefr
     }
 
 
-    private View initViews(LayoutInflater inflater, ViewGroup container) {
+    private View initViews(final LayoutInflater inflater, ViewGroup container) {
         View view = inflater.inflate(R.layout.fragment_all, container, false);
         ButterKnife.bind(this, view);
         mSwipeRefresh.setColorSchemeResources(R.color.colorPrimary);
         mSwipeRefresh.setOnRefreshListener(this);
         mAllGankShow.setLayoutManager(new LinearLayoutManager(getActivity()));
         mGankAdapter = new GankAdapter(getActivity());
+        mGankAdapter.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClickListener(int position, Object object) {
+                Gank gank = (Gank) object;
+                String url = gank.getUrl();
+                Intent intent = new Intent();
+                intent.putExtra("url", url);
+                intent.setClass(getActivity(), WebViewActivity.class);
+                startActivity(intent);
+
+            }
+        });
         mAllGankShow.setAdapter(mGankAdapter);
         mAllGankShow.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override

@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.xf.gankapp.OnItemClickListener;
 import com.xf.gankapp.R;
 import com.xf.gankapp.bean.Gank;
 
@@ -23,6 +24,7 @@ public class GankAdapter extends RecyclerView.Adapter<GankAdapter.ViewHolder> {
 
     private List<Gank> mGankList;
     private LayoutInflater mInflater;
+    private OnItemClickListener mListener;
 
     public GankAdapter(Context context) {
         mInflater = LayoutInflater.from(context);
@@ -35,14 +37,25 @@ public class GankAdapter extends RecyclerView.Adapter<GankAdapter.ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
         Gank gank = mGankList.get(position);
         holder.mAuthor.setText(gank.getWho());
         holder.mTitle.setText(gank.getDesc());
         holder.mDate.setText(gank.getPublishedAt());
         holder.mType.setText(gank.getType());
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mListener != null) {
+                    mListener.onItemClickListener(position, mGankList.get(position));
+                }
+            }
+        });
 
+    }
 
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        mListener = listener;
     }
 
     @Override
@@ -54,6 +67,7 @@ public class GankAdapter extends RecyclerView.Adapter<GankAdapter.ViewHolder> {
         mGankList = gankList;
         notifyDataSetChanged();
     }
+
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
