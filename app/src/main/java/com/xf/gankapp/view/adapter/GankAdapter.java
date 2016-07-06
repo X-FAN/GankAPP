@@ -37,7 +37,7 @@ public class GankAdapter extends RecyclerView.Adapter<GankAdapter.ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, final int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
         Gank gank = mGankList.get(position);
         holder.mAuthor.setText(gank.getWho());
         holder.mTitle.setText(gank.getDesc());
@@ -47,7 +47,8 @@ public class GankAdapter extends RecyclerView.Adapter<GankAdapter.ViewHolder> {
             @Override
             public void onClick(View v) {
                 if (mListener != null) {
-                    mListener.onItemClickListener(position, mGankList.get(position));
+                    int tempPosition = holder.getAdapterPosition();
+                    mListener.onItemClickListener(tempPosition, mGankList.get(tempPosition));
                 }
             }
         });
