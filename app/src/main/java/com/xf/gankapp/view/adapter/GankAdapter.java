@@ -33,7 +33,14 @@ public class GankAdapter extends RecyclerView.Adapter<GankAdapter.ViewHolder> {
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = mInflater.inflate(R.layout.gank_item, parent, false);
-        return new ViewHolder(view);
+        final ViewHolder viewHolder = new ViewHolder(view);
+        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.onItemClickListener(viewHolder.getLayoutPosition(), mGankList.get(viewHolder.getLayoutPosition()));
+            }
+        });
+        return viewHolder;
     }
 
     @Override
@@ -43,16 +50,6 @@ public class GankAdapter extends RecyclerView.Adapter<GankAdapter.ViewHolder> {
         holder.mTitle.setText(gank.getDesc());
         holder.mDate.setText(gank.getPublishedAt());
         holder.mType.setText(gank.getType());
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mListener != null) {
-                    int tempPosition = holder.getAdapterPosition();
-                    mListener.onItemClickListener(tempPosition, mGankList.get(tempPosition));
-                }
-            }
-        });
-
     }
 
     public void setOnItemClickListener(OnItemClickListener listener) {
