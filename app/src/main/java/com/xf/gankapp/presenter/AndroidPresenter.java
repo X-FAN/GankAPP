@@ -8,6 +8,7 @@ import com.xf.gankapp.module.interfaceModule.IGankModule;
 
 import java.util.List;
 
+import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -46,7 +47,38 @@ public class AndroidPresenter implements AndroidContract.Presenter {
                         return null;
                     }
                 })
-                .map(new Func1<List<Gank>, List<Gank>>() {
+                .flatMap(new Func1<List<Gank>, Observable<Gank>>() {
+                    @Override
+                    public Observable<Gank> call(List<Gank> ganks) {
+                        return Observable.from(ganks);
+                    }
+                }).map(new Func1<Gank, Gank>() {
+                    @Override
+                    public Gank call(Gank gank) {
+                        String date = gank.getPublishedAt().substring(0, 10);
+                        gank.setPublishedAt(date);
+                        return gank;
+                    }
+                }).toList()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<List<Gank>>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        mAndroidView.showTip(e.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(List<Gank> ganks) {
+                        mAndroidView.showAndroidGank(ganks);
+                    }
+                });
+
+     /*           .map(new Func1<List<Gank>, List<Gank>>() {
                     @Override
                     public List<Gank> call(List<Gank> ganks) {
                         if (ganks != null) {
@@ -74,7 +106,7 @@ public class AndroidPresenter implements AndroidContract.Presenter {
                     public void onNext(List<Gank> ganks) {
                         mAndroidView.showAndroidGank(ganks);
                     }
-                });
+                });*/
         mSubscriptions.add(subscription);
     }
 

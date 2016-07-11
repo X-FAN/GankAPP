@@ -8,6 +8,7 @@ import com.xf.gankapp.module.interfaceModule.IGankModule;
 
 import java.util.List;
 
+import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -31,9 +32,10 @@ public class IOSPresenter implements IOSContract.Presenter {
         mIOSView = view;
         mIOSView.setPresenter(this);
     }
+
     @Override
     public void subscribeIOSGank(int count, int page) {
-        Subscription subscription = mGankModule.getIOS(count, page)
+        Subscription subscription = mGankModule.getAndroid(count, page)
                 .subscribeOn(Schedulers.io())
                 .map(new Func1<AllResults, List<Gank>>() {
 
@@ -45,18 +47,19 @@ public class IOSPresenter implements IOSContract.Presenter {
                         return null;
                     }
                 })
-                .map(new Func1<List<Gank>, List<Gank>>() {
+                .flatMap(new Func1<List<Gank>, Observable<Gank>>() {
                     @Override
-                    public List<Gank> call(List<Gank> ganks) {
-                        if (ganks != null) {
-                            for (Gank gank : ganks) {//处理日期
-                                String date = gank.getPublishedAt().substring(0, 10);
-                                gank.setPublishedAt(date);
-                            }
-                        }
-                        return ganks;
+                    public Observable<Gank> call(List<Gank> ganks) {
+                        return Observable.from(ganks);
                     }
-                })
+                }).map(new Func1<Gank, Gank>() {
+                    @Override
+                    public Gank call(Gank gank) {
+                        String date = gank.getPublishedAt().substring(0, 10);
+                        gank.setPublishedAt(date);
+                        return gank;
+                    }
+                }).toList()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<List<Gank>>() {
                     @Override
