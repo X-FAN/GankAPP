@@ -84,47 +84,6 @@ public class IOSPresenter implements IOSContract.Presenter {
                         mIOSView.showIOSGank(ganks);
                     }
                 });
-
-            /*    .map(new Func1<AllResults, List<Gank>>() {
-
-                    @Override
-                    public List<Gank> call(AllResults allResults) {
-                        if (!allResults.isError()) {
-                            return allResults.getGankList();
-                        }
-                        return null;
-                    }
-                })
-                .flatMap(new Func1<List<Gank>, Observable<Gank>>() {
-                    @Override
-                    public Observable<Gank> call(List<Gank> ganks) {
-                        return Observable.from(ganks);
-                    }
-                }).map(new Func1<Gank, Gank>() {
-                    @Override
-                    public Gank call(Gank gank) {
-                        String date = gank.getPublishedAt().substring(0, 10);
-                        gank.setPublishedAt(date);
-                        return gank;
-                    }
-                }).toList()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<List<Gank>>() {
-                    @Override
-                    public void onCompleted() {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        mIOSView.showTip(e.getMessage());
-                    }
-
-                    @Override
-                    public void onNext(List<Gank> ganks) {
-                        mIOSView.showIOSGank(ganks);
-                    }
-                });*/
         mSubscriptions.add(subscription);
     }
 

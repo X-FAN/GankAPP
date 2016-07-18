@@ -37,14 +37,19 @@ public class AndroidPresenter implements AndroidContract.Presenter {
     public void subscribeAndroidGank(int count, int page) {
         Subscription subscription = mGankModule.getAndroid(count, page)
                 .subscribeOn(Schedulers.io())
-                .map(new Func1<AllResults, List<Gank>>() {
-
+                .flatMap(new Func1<AllResults, Observable<List<Gank>>>() {
                     @Override
-                    public List<Gank> call(AllResults allResults) {
+                    public Observable<List<Gank>> call(final AllResults allResults) {
                         if (!allResults.isError()) {
-                            return allResults.getGankList();
+                            return Observable.create(new Observable.OnSubscribe<List<Gank>>() {
+                                @Override
+                                public void call(Subscriber<? super List<Gank>> subscriber) {
+                                    subscriber.onNext(allResults.getGankList());
+                                    subscriber.onCompleted();
+                                }
+                            });
                         }
-                        return null;
+                        return Observable.error(new Exception("数据返回异常"));
                     }
                 })
                 .flatMap(new Func1<List<Gank>, Observable<Gank>>() {
@@ -52,14 +57,16 @@ public class AndroidPresenter implements AndroidContract.Presenter {
                     public Observable<Gank> call(List<Gank> ganks) {
                         return Observable.from(ganks);
                     }
-                }).map(new Func1<Gank, Gank>() {
+                })
+                .map(new Func1<Gank, Gank>() {
                     @Override
                     public Gank call(Gank gank) {
                         String date = gank.getPublishedAt().substring(0, 10);
                         gank.setPublishedAt(date);
                         return gank;
                     }
-                }).toList()
+                })
+                .toList()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<List<Gank>>() {
                     @Override
@@ -77,36 +84,6 @@ public class AndroidPresenter implements AndroidContract.Presenter {
                         mAndroidView.showAndroidGank(ganks);
                     }
                 });
-
-     /*           .map(new Func1<List<Gank>, List<Gank>>() {
-                    @Override
-                    public List<Gank> call(List<Gank> ganks) {
-                        if (ganks != null) {
-                            for (Gank gank : ganks) {//处理日期
-                                String date = gank.getPublishedAt().substring(0, 10);
-                                gank.setPublishedAt(date);
-                            }
-                        }
-                        return ganks;
-                    }
-                })
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<List<Gank>>() {
-                    @Override
-                    public void onCompleted() {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        mAndroidView.showTip(e.getMessage());
-                    }
-
-                    @Override
-                    public void onNext(List<Gank> ganks) {
-                        mAndroidView.showAndroidGank(ganks);
-                    }
-                });*/
         mSubscriptions.add(subscription);
     }
 

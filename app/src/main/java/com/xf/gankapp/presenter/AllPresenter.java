@@ -33,16 +33,21 @@ public class AllPresenter implements AllContract.Presenter {
 
     @Override
     public void subscribeAllGank(int count, int page) {
-        Subscription subscription = mGankModule.getAndroid(count, page)
+        Subscription subscription = mGankModule.getAll(count, page)
                 .subscribeOn(Schedulers.io())
-                .map(new Func1<AllResults, List<Gank>>() {
-
+                .flatMap(new Func1<AllResults, Observable<List<Gank>>>() {
                     @Override
-                    public List<Gank> call(AllResults allResults) {
+                    public Observable<List<Gank>> call(final AllResults allResults) {
                         if (!allResults.isError()) {
-                            return allResults.getGankList();
+                            return Observable.create(new Observable.OnSubscribe<List<Gank>>() {
+                                @Override
+                                public void call(Subscriber<? super List<Gank>> subscriber) {
+                                    subscriber.onNext(allResults.getGankList());
+                                    subscriber.onCompleted();
+                                }
+                            });
                         }
-                        return null;
+                        return Observable.error(new Exception("数据返回异常"));
                     }
                 })
                 .flatMap(new Func1<List<Gank>, Observable<Gank>>() {
@@ -50,14 +55,16 @@ public class AllPresenter implements AllContract.Presenter {
                     public Observable<Gank> call(List<Gank> ganks) {
                         return Observable.from(ganks);
                     }
-                }).map(new Func1<Gank, Gank>() {
+                })
+                .map(new Func1<Gank, Gank>() {
                     @Override
                     public Gank call(Gank gank) {
                         String date = gank.getPublishedAt().substring(0, 10);
                         gank.setPublishedAt(date);
                         return gank;
                     }
-                }).toList()
+                })
+                .toList()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<List<Gank>>() {
                     @Override
