@@ -14,20 +14,17 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
-import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by X-FAN on 2016/7/6.
  */
-public class AndroidPresenter implements AndroidContract.Presenter {
+public class AndroidPresenter extends PresenterAdapter implements AndroidContract.Presenter {
 
-    private CompositeSubscription mSubscriptions;
     private IGankModule mGankModule;
     private AndroidContract.View mAndroidView;
 
 
     public AndroidPresenter(AndroidContract.View view) {
-        mSubscriptions = new CompositeSubscription();
         mGankModule = new GankModule();
         mAndroidView = view;
         mAndroidView.setPresenter(this);
@@ -84,12 +81,6 @@ public class AndroidPresenter implements AndroidContract.Presenter {
                         mAndroidView.showAndroidGank(ganks);
                     }
                 });
-        mSubscriptions.add(subscription);
-    }
-
-
-    @Override
-    public void unSubscribe() {
-        mSubscriptions.clear();
+        addSubscription(subscription);
     }
 }
