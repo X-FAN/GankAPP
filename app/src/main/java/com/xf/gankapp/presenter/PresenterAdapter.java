@@ -9,7 +9,7 @@ import rx.subscriptions.CompositeSubscription;
  * Created by X-FAN on 2016/9/5.
  */
 public class PresenterAdapter implements BasePresenter {
-    protected CompositeSubscription mSubscriptions;
+    protected CompositeSubscription mSubscriptions = new CompositeSubscription();
 
     @Override
     public void unSubscribe() {
